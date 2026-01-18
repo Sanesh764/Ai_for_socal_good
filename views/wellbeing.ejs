@@ -1,0 +1,158 @@
+<section class="wellbeing-section" aria-labelledby="wellbeing-heading">
+    <div class="container">
+        <h1 id="wellbeing-heading" class="page-title">Wellbeing Companion</h1>
+        
+        <div class="wellbeing-disclaimer" role="alert" aria-live="polite">
+            <p class="disclaimer-text">
+                <strong>Important:</strong> This AI assistant provides general information and support only. 
+                It does not provide medical diagnosis, treatment plans, or legal advice. 
+                For serious concerns, please consult a healthcare professional. 
+                For emergencies, contact: <a href="tel:1800-HELP-NOW" class="disclaimer-link">1800-HELP-NOW</a>
+            </p>
+        </div>
+        
+        <div class="chat-container">
+            <div class="chat-messages" id="chat-messages" role="log" aria-live="polite" aria-label="Chat messages">
+                <div class="chat-message chat-message-system">
+                    <div class="message-bubble">
+                        <p class="message-text">
+                            Hello! I'm your wellbeing companion. I'm here to listen and provide general information and support. 
+                            How can I help you today?
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <form class="chat-form" id="chat-form" aria-label="Chat input form">
+                <div class="form-group">
+                    <label for="language-select" class="form-label">Language / भाषा</label>
+                    <select id="language-select" name="language" class="form-select" aria-label="Select language">
+                        <option value="english">English</option>
+                        <option value="hindi">हिंदी (Hindi)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="user-query" class="form-label">Your message</label>
+                    <textarea 
+                        id="user-query" 
+                        name="query" 
+                        class="form-textarea" 
+                        rows="4" 
+                        placeholder="Type your question or message here..."
+                        required
+                        aria-required="true"
+                        aria-describedby="query-help"
+                    ></textarea>
+                    <small id="query-help" class="form-help">Maximum 1000 characters. Be respectful and clear.</small>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" id="submit-btn">
+                    <span class="btn-text">Send Message</span>
+                    <span class="btn-loader" aria-hidden="true" style="display: none;">⏳</span>
+                </button>
+            </form>
+        </div>
+        
+        <div class="crisis-resources" role="region" aria-labelledby="crisis-heading">
+            <h2 id="crisis-heading" class="resources-title">Crisis Resources</h2>
+            <p class="resources-text">
+                If you're in immediate distress or crisis, please reach out to human support:
+            </p>
+            <ul class="resources-list">
+                <li><strong>Crisis Hotline:</strong> <a href="tel:1800-HELP-NOW" class="resource-link">1800-HELP-NOW</a></li>
+                <li><strong>Campus Counseling:</strong> Available 24/7 at your student services center</li>
+                <li><strong>Emergency Services:</strong> <a href="tel:911" class="resource-link">911</a> (or your local emergency number)</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<script>
+// Chat functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const chatForm = document.getElementById('chat-form');
+    const chatMessages = document.getElementById('chat-messages');
+    const userQuery = document.getElementById('user-query');
+    const submitBtn = document.getElementById('submit-btn');
+    const btnText = submitBtn.querySelector('.btn-text');
+    const btnLoader = submitBtn.querySelector('.btn-loader');
+    
+    chatForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const query = userQuery.value.trim();
+        const language = document.getElementById('language-select').value;
+        
+        if (!query) {
+            return;
+        }
+        
+        // Disable form
+        submitBtn.disabled = true;
+        btnText.style.display = 'none';
+        btnLoader.style.display = 'inline';
+        userQuery.disabled = true;
+        
+        // Add user message
+        const userMessage = document.createElement('div');
+        userMessage.className = 'chat-message chat-message-user';
+        userMessage.innerHTML = `<div class="message-bubble"><p class="message-text">${escapeHtml(query)}</p></div>`;
+        chatMessages.appendChild(userMessage);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        // Clear input
+        userQuery.value = '';
+        
+        try {
+            const response = await fetch('/wellbeing/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ query, language })
+            });
+            
+            const data = await response.json();
+            
+            // Add AI response
+            const aiMessage = document.createElement('div');
+            if (data.requiresHumanSupport) {
+                aiMessage.className = 'chat-message chat-message-crisis';
+            } else {
+                aiMessage.className = 'chat-message chat-message-ai';
+            }
+            aiMessage.innerHTML = `<div class="message-bubble"><p class="message-text">${escapeHtml(data.response)}</p></div>`;
+            chatMessages.appendChild(aiMessage);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // If crisis detected, scroll to resources
+            if (data.requiresHumanSupport) {
+                setTimeout(() => {
+                    document.querySelector('.crisis-resources').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 500);
+            }
+            
+        } catch (error) {
+            const errorMessage = document.createElement('div');
+            errorMessage.className = 'chat-message chat-message-error';
+            errorMessage.innerHTML = '<div class="message-bubble"><p class="message-text">Sorry, I encountered an error. Please try again or contact support.</p></div>';
+            chatMessages.appendChild(errorMessage);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        } finally {
+            // Re-enable form
+            submitBtn.disabled = false;
+            btnText.style.display = 'inline';
+            btnLoader.style.display = 'none';
+            userQuery.disabled = false;
+            userQuery.focus();
+        }
+    });
+    
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+});
+</script>

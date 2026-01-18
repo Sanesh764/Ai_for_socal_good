@@ -1,0 +1,48 @@
+<section class="alerts-section" aria-labelledby="alerts-heading">
+    <div class="container">
+        <h1 id="alerts-heading" class="page-title">Campus Alerts</h1>
+        
+        <div class="alerts-disclaimer" role="note">
+            <p class="disclaimer-text">
+                All alerts are verified and approved by campus administrators. 
+                These alerts help keep our community informed and safe.
+            </p>
+        </div>
+        
+        <div class="alerts-container">
+            <% if (typeof alerts !== 'undefined' && alerts.length > 0) { %>
+                <% alerts.forEach(function(alert) { %>
+                    <article class="alert-card alert-<%= alert.type %>" role="article">
+                        <div class="alert-header">
+                            <h2 class="alert-title"><%= alert.title %></h2>
+                            <span class="alert-type" aria-label="Alert type: <%= alert.type %>"><%= alert.type %></span>
+                        </div>
+                        <p class="alert-message"><%= alert.message %></p>
+                        <time class="alert-time" datetime="<%= new Date(alert.createdAt).toISOString() %>">
+                            <%= new Date(alert.createdAt).toLocaleDateString('en-US', { 
+                                year: 'numeric', 
+                                month: 'long', 
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            }) %>
+                        </time>
+                    </article>
+                <% }); %>
+            <% } else { %>
+                <div class="no-alerts" role="status">
+                    <p class="no-alerts-text">No active alerts at this time. Check back later for updates.</p>
+                </div>
+            <% } %>
+        </div>
+        
+        <div class="alerts-info">
+            <h2 class="info-title">About Campus Alerts</h2>
+            <p class="info-text">
+                Campus alerts are carefully reviewed by administrators before being posted. 
+                They may include weather warnings, safety notices, campus closures, or important announcements. 
+                All alerts are designed to be clear, accessible, and non-panic-inducing.
+            </p>
+        </div>
+    </div>
+</section>

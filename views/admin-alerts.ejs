@@ -1,0 +1,92 @@
+<section class="admin-section" aria-labelledby="admin-heading">
+    <div class="container">
+        <h1 id="admin-heading" class="page-title">Manage Campus Alerts</h1>
+        
+        <div class="admin-disclaimer" role="note">
+            <p class="disclaimer-text">
+                <strong>Admin Only:</strong> Create and manage campus alerts. All alerts are 
+                immediately visible to users (in production, implement approval workflow).
+            </p>
+        </div>
+        
+        <form class="admin-form" id="alert-form" aria-label="Create alert form">
+            <div class="form-group">
+                <label for="alert-title" class="form-label">Alert Title *</label>
+                <input 
+                    type="text" 
+                    id="alert-title" 
+                    name="title" 
+                    class="form-input" 
+                    required
+                    aria-required="true"
+                    maxlength="200"
+                >
+            </div>
+            
+            <div class="form-group">
+                <label for="alert-message" class="form-label">Alert Message *</label>
+                <textarea 
+                    id="alert-message" 
+                    name="message" 
+                    class="form-textarea" 
+                    rows="5" 
+                    required
+                    aria-required="true"
+                    maxlength="1000"
+                ></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="alert-type" class="form-label">Alert Type *</label>
+                <select id="alert-type" name="type" class="form-select" required aria-required="true">
+                    <option value="info">Information</option>
+                    <option value="warning">Warning</option>
+                    <option value="emergency">Emergency</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Create Alert</button>
+        </form>
+        
+        <div id="alert-status" role="status" aria-live="polite"></div>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const alertForm = document.getElementById('alert-form');
+    const alertStatus = document.getElementById('alert-status');
+    
+    alertForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(alertForm);
+        const data = {
+            title: formData.get('title'),
+            message: formData.get('message'),
+            type: formData.get('type')
+        };
+        
+        try {
+            const response = await fetch('/admin/alerts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+                alertStatus.innerHTML = '<p class="success-message">Alert created successfully!</p>';
+                alertForm.reset();
+            } else {
+                alertStatus.innerHTML = '<p class="error-message">Failed to create alert. Please try again.</p>';
+            }
+        } catch (error) {
+            alertStatus.innerHTML = '<p class="error-message">Error: ' + error.message + '</p>';
+        }
+    });
+});
+</script>

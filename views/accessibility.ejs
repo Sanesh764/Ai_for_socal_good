@@ -1,0 +1,79 @@
+<section class="accessibility-section" aria-labelledby="accessibility-heading">
+    <div class="container">
+        <h1 id="accessibility-heading" class="page-title">Accessibility Features</h1>
+        
+        <p class="intro-text">
+            Campus Compass is built with accessibility as a core principle. 
+            We believe everyone deserves equal access to information and support.
+        </p>
+        
+        <div class="features-list">
+            <article class="feature-item">
+                <h2 class="feature-item-title">High Contrast Mode</h2>
+                <p class="feature-item-description">
+                    Toggle high contrast mode for better visibility. Increases contrast ratios 
+                    to meet WCAG AAA standards, making text and UI elements easier to distinguish.
+                </p>
+                <button class="btn btn-secondary" onclick="document.getElementById('toggle-high-contrast').click()">
+                    Try High Contrast Mode
+                </button>
+            </article>
+            
+            <article class="feature-item">
+                <h2 class="feature-item-title">Dyslexia-Friendly Mode</h2>
+                <p class="feature-item-description">
+                    Switches to OpenDyslexic font and optimized spacing. Reduces visual stress 
+                    and improves readability for users with dyslexia and reading difficulties.
+                </p>
+                <button class="btn btn-secondary" onclick="document.getElementById('toggle-dyslexia-mode').click()">
+                    Try Dyslexia-Friendly Mode
+                </button>
+            </article>
+            
+            <article class="feature-item">
+                <h2 class="feature-item-title">Text-to-Speech</h2>
+                <p class="feature-item-description">
+                    Built-in text-to-speech support using the Web Speech API. 
+                    Listen to content read aloud, perfect for visually impaired users 
+                    or those who prefer auditory learning.
+                </p>
+                <button class="btn btn-secondary" onclick="document.getElementById('toggle-tts').click()">
+                    Try Text-to-Speech
+                </button>
+            </article>
+            
+            <article class="feature-item">
+                <h2 class="feature-item-title">Keyboard Navigation</h2>
+                <p class="feature-item-description">
+                    Full keyboard navigation support. All interactive elements are accessible 
+                    via keyboard. Tab order is logical, and focus indicators are clearly visible.
+                </p>
+            </article>
+            
+            <article class="feature-item">
+                <h2 class="feature-item-title">Screen Reader Support</h2>
+                <p class="feature-item-description">
+                    Semantic HTML, ARIA labels, and proper heading structure ensure 
+                    compatibility with screen readers like NVDA, JAWS, and VoiceOver.
+                </p>
+            </article>
+            
+            <article class="feature-item">
+                <h2 class="feature-item-title">Simple Language & Low Cognitive Load</h2>
+                <p class="feature-item-description">
+                    Clear, simple language throughout. Minimal distractions, clean layout, 
+                    and straightforward navigation reduce cognitive load for all users.
+                </p>
+            </article>
+        </div>
+        
+        <div class="standards-info">
+            <h2 class="standards-title">Accessibility Standards</h2>
+            <p class="standards-text">
+                Campus Compass aims to meet <strong>WCAG 2.1 Level AA</strong> standards, 
+                with many features exceeding to Level AAA. We continuously test with 
+                assistive technologies and welcome feedback from users.
+            </p>
+        </div>
+    </div>
+</section>
