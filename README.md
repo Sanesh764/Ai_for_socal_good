@@ -1,3 +1,5 @@
+
+server linK:-   https://ai-for-socal-good.onrender.com
 # 🧭 Campus Compass
 
 **Tagline:** *Your Inclusive Campus Companion for Wellbeing and Information Access*
